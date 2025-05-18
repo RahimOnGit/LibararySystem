@@ -47,26 +47,6 @@ public class Book {
     }
 
 
-//    public Book(String title, int publicationYear, int availableCopies, int totalCopies, Long authorId) {
-//        this.title = title;
-//        this.publicationYear = publicationYear;
-//        this.availableCopies = availableCopies;
-//        this.totalCopies = totalCopies;
-//
-//        if(authorId!=null) {
-//            authors authors = new authors();
-//            authors.setId(authorId);
-//            this.authors = authors;
-//        }
-//        }
-//
-//    public Book(String title, int publicationYear, int availableCopies, int totalCopies, authors author  ) {
-//        this.title = title;
-//        this.publicationYear = publicationYear;
-//        this.availableCopies = availableCopies;
-//        this.totalCopies = totalCopies;
-//        this.authors = author;
-//    }
 
 
     public Book(){}

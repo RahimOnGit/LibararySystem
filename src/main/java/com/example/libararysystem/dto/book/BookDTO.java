@@ -21,5 +21,11 @@ public class BookDTO {
 
     }
 
+    public BookDTO(String title) {
+
+        this.title = title;
+
+    }
+
 // Constructor, getters, setters
 }

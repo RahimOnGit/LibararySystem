@@ -13,7 +13,7 @@ public class AuthorMapper {
     private AuthorRepo authorRepo;
 
     @Autowired
-    private AuthorMapper(AuthorRepo repo) {
+    public AuthorMapper(AuthorRepo repo) {
         this.authorRepo = repo;
     }
     public AuthorDTO toDTO(authors author) {

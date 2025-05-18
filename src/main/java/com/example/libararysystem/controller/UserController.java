@@ -1,9 +1,11 @@
 package com.example.libararysystem.controller;
 
+import com.example.libararysystem.dto.loan.LoanDTO;
 import com.example.libararysystem.dto.user.UserCreateDTO;
 import com.example.libararysystem.dto.user.UserDTO;
 import com.example.libararysystem.entity.User;
 import com.example.libararysystem.repository.UserRepo;
+import com.example.libararysystem.service.LoanService;
 import com.example.libararysystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,11 +20,29 @@ import java.util.List;
 public class UserController {
     private final UserRepo userRepo;
     private final UserService userService;
+    private final LoanService loanService;
     @Autowired
-    public UserController(UserService userService, UserRepo userRepo) {
+    public UserController(UserService userService, UserRepo userRepo , LoanService loanService) {
         this.userRepo = userRepo;
         this.userService = userService;
+        this.loanService = loanService;
     }
+    //post
+    @PostMapping("/loans")
+    public ResponseEntity<?> createLoan(@RequestParam("bookId") int bookId , @RequestParam("userId") int userId) {
+
+        LoanDTO loanDTO = loanService.borrowBook(bookId,userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanDTO);
+
+    }
+    //loan by user id
+    @GetMapping("{id}/loans")
+    public ResponseEntity<List<LoanDTO>> getLoans(@PathVariable int id) {
+      List<LoanDTO>  dto  = loanService.getLoanByUserId(id);
+        return ResponseEntity.ok(dto);
+    }
+
+
 //create user
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO user) {

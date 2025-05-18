@@ -18,4 +18,8 @@ public class UserDTO {
         this.lastName = lastName;
         this.email = email;
     }
+
+    public UserDTO() {
+
+    }
 }

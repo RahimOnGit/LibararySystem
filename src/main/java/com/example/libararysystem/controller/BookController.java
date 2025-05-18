@@ -1,9 +1,12 @@
 package com.example.libararysystem.controller;
 import com.example.libararysystem.dto.book.BookCreateDTO;
 import com.example.libararysystem.dto.book.BookDTO;
+import com.example.libararysystem.dto.loan.LoanDTO;
 import com.example.libararysystem.entity.authors;
 import com.example.libararysystem.service.AuthorService;
 import com.example.libararysystem.service.BookService;
+import com.example.libararysystem.service.LoanService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.example.libararysystem.repository.BookRepo;
 import com.example.libararysystem.entity.Book;
@@ -16,19 +19,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/book")
 public class BookController {
+    @Autowired
+    private BookRepo bookRepo;
+
 
     private final BookService bookService;
     @Autowired
     private AuthorService authorService;
+    private LoanService loanService;
 
-    public BookController(BookService bookService ,  AuthorService authorService) {
+    public BookController(BookService bookService,LoanService loanService ,  AuthorService authorService) {
         this.bookService = bookService;
         this.authorService = authorService;
+        this.loanService = loanService;
 
     }
 
-    @Autowired
-    private BookRepo bookRepo;
+
 
 @GetMapping("/search")
     // get book by title
