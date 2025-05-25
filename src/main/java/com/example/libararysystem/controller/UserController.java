@@ -35,12 +35,32 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(loanDTO);
 
     }
+
+    @PutMapping("/loans/{id}/extend")
+    public ResponseEntity<?> extendLoan(@PathVariable("id") long loanId)
+    {
+
+        LoanDTO loanDTO = loanService.extendDate(loanId);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(loanDTO);
+    }
+
+
+    @PutMapping("/loans/{id}/return")
+    public ResponseEntity<?> returnBook(@PathVariable long id) {
+        LoanDTO dto = loanService.returnBook(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(dto);
+
+    }
+
     //loan by user id
     @GetMapping("{id}/loans")
     public ResponseEntity<List<LoanDTO>> getLoans(@PathVariable int id) {
       List<LoanDTO>  dto  = loanService.getLoanByUserId(id);
         return ResponseEntity.ok(dto);
     }
+
+
 
 
 //create user

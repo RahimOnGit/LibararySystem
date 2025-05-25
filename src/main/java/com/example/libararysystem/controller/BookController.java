@@ -1,11 +1,16 @@
 package com.example.libararysystem.controller;
 import com.example.libararysystem.dto.book.BookCreateDTO;
 import com.example.libararysystem.dto.book.BookDTO;
+import com.example.libararysystem.dto.book.BookDetailsDTO;
 import com.example.libararysystem.dto.loan.LoanDTO;
 import com.example.libararysystem.entity.authors;
 import com.example.libararysystem.service.AuthorService;
 import com.example.libararysystem.service.BookService;
 import com.example.libararysystem.service.LoanService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.example.libararysystem.repository.BookRepo;
@@ -35,6 +40,22 @@ public class BookController {
 
     }
 
+@GetMapping("/paged")
+public ResponseEntity<Page<BookDetailsDTO>> findAll
+        (@RequestParam(defaultValue = "0") int page,
+         @RequestParam(defaultValue = "5") int size,
+         @RequestParam(defaultValue = "id") String sortBy,
+         @RequestParam(defaultValue = "asc") String order) {
+
+    Sort sort = order.equalsIgnoreCase("desc") ?
+            Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+    Pageable pageable = PageRequest.of(page,size,sort);
+    Page<BookDetailsDTO> pagedBooks = bookService.findAll(pageable);
+    return ResponseEntity.ok((pagedBooks));
+
+
+}
 
 
 @GetMapping("/search")
@@ -47,6 +68,7 @@ public class BookController {
     }
 
     //create new book
+
     @PostMapping
     public ResponseEntity<BookDTO> create(@RequestBody BookCreateDTO book) {
         BookDTO createdBook = bookService.create(book);
@@ -87,8 +109,8 @@ List<Book> books = bookRepo.findAll();
 
 
     @GetMapping
-    public ResponseEntity<List<BookDTO>> findAll() {
-        List<BookDTO> books = bookService.findAll();
+    public ResponseEntity<List<BookDetailsDTO>> findAll() {
+        List<BookDetailsDTO> books = bookService.findAll();
         return ResponseEntity.ok(books);
     }
 

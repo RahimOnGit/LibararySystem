@@ -2,6 +2,7 @@ package com.example.libararysystem.mapper;
 
 import com.example.libararysystem.dto.book.BookCreateDTO;
 import com.example.libararysystem.dto.book.BookDTO;
+import com.example.libararysystem.dto.book.BookDetailsDTO;
 import com.example.libararysystem.entity.Book;
 import com.example.libararysystem.entity.authors;
 import com.example.libararysystem.repository.AuthorRepo;
@@ -52,5 +53,22 @@ public class BookMapper {
 
         return book;
     }
+
+
+    public  BookDetailsDTO toDtoDetails(Book book) {
+        if (book == null) return null;
+
+        return new BookDetailsDTO(
+                book.getId(),
+                book.getTitle(),
+                book.getPublicationYear(),
+                book.getAvailableCopies(),  // Added missing field
+                book.getTotalCopies(),
+                book.getAuthors());
+//                book.getAuthors());
+//        != null ? book.getAuthors().getId() : null  // Include author ID
+
+    }
+
 
 }

@@ -2,14 +2,20 @@ package com.example.libararysystem.service;
 
 import com.example.libararysystem.dto.book.BookCreateDTO;
 import com.example.libararysystem.dto.book.BookDTO;
+import com.example.libararysystem.dto.book.BookDetailsDTO;
 import com.example.libararysystem.entity.Book;
+import com.example.libararysystem.exceptions.BookNotFoundException;
 import com.example.libararysystem.mapper.BookMapper;
 import com.example.libararysystem.repository.BookRepo;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -26,9 +32,17 @@ public class BookService {
     }
     // - Lista alla böcker
 
-    public List<BookDTO> findAll() {
+    public List<BookDetailsDTO> findAll() {
         return bookRepo.findAll()
-                .stream().map(bookMapper::toDto).toList();
+                .stream().map(bookMapper::toDtoDetails).toList();
+
+    }
+
+    public Page<BookDetailsDTO> findAll(Pageable pageable) {
+        Page<Book> books = bookRepo.findAll(pageable);
+        List<BookDetailsDTO> dto = books.getContent().stream().map(bookMapper::toDtoDetails).toList();
+
+        return books.map(bookMapper::toDtoDetails);
 
     }
 
@@ -36,11 +50,17 @@ public class BookService {
 
 
 //GET /books/search - Sök böcker på title(query parameters)
-public List<BookDTO> findByTitle(String title) {
-       return bookRepo.findByTitle(title)
-               .stream()
-               .map(bookMapper::toDto)
-               .toList();
+public List<BookDTO> findByTitle(String title)  {
+
+       List<Book> books = bookRepo.findByTitle(title);
+               if(books.isEmpty()) {
+                throw new BookNotFoundException(title);
+               }
+               return books.stream()
+                       .map(bookMapper::toDto)
+                       .collect(Collectors.toList());
+
+
     }
 
     //POST /books - Skapa ny bok
@@ -52,7 +72,7 @@ public List<BookDTO> findByTitle(String title) {
             bookRepo.save(book);
             return bookMapper.toDto(book);
         }
-       throw new IllegalArgumentException("BookCreateDTO cannot be null");
+       throw new IllegalArgumentException("book cannot be null");
          }
 //@Transactional
 //    public Book save(Book book)
