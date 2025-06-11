@@ -27,4 +27,9 @@ private String returnedDate;
 
     }
     public LoanDTO() {}
+
+    public LoanDTO(Book book, User user) {
+        this.book = book;
+        this.user = user;
+    }
 }

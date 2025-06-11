@@ -5,6 +5,7 @@ import com.example.libararysystem.dto.loan.LoanDTO;
 import com.example.libararysystem.entity.Book;
 import com.example.libararysystem.entity.Loan;
 import com.example.libararysystem.entity.User;
+import com.example.libararysystem.exceptions.BookNotFoundException;
 import com.example.libararysystem.exceptions.LoanNotFoundException;
 import com.example.libararysystem.mapper.LoanMapper;
 import com.example.libararysystem.repository.BookRepo;
@@ -63,14 +64,16 @@ public class LoanService {
     //borrow a book
     //create loan
   @Transactional(isolation = Isolation.SERIALIZABLE , propagation = Propagation.REQUIRED)
-public LoanDTO borrowBook(int bookId, int userId) {
+public LoanDTO borrowBook(Long bookId, Long userId) {
+
+
         LoanCreateDTO loanCreateDTO = new LoanCreateDTO(bookId, userId);
        Loan loan =  loanMapper.toEntity(loanCreateDTO);
+       if(loan.getBook()==null) throw new BookNotFoundException(bookId);
        if(loan.getBook().getAvailableCopies()<=0)
        {
-           throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "could not borrow copies");
+           throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "could not borrow , no available copies");
        }
-
 
        loan.getBook().setAvailableCopies(loan.getBook().getAvailableCopies() - 1);
 

@@ -9,13 +9,13 @@ import java.time.LocalDate;
 @Data
 public class LoanCreateDTO {
 
-    private int bookId;
-    private int userId;
+    private long bookId;
+    private long userId;
     private String borrowDate;
     private String dueDate ;
 
 
-    public LoanCreateDTO(int bookId, int userId) {
+    public LoanCreateDTO(long bookId, long userId) {
         this.bookId = bookId;
         this.userId = userId;
         this.borrowDate = LocalDate.now().toString();

@@ -2,6 +2,8 @@ package com.example.libararysystem.service;
 
 import com.example.libararysystem.dto.book.BookDTO;
 import com.example.libararysystem.entity.Book;
+import com.example.libararysystem.entity.Loan;
+import com.example.libararysystem.entity.User;
 import com.example.libararysystem.mapper.BookMapper;
 import com.example.libararysystem.repository.BookRepo;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -54,7 +57,5 @@ class BookServiceTest {
 
     }
 
-    @Test
-    void create() {
-    }
+
 }

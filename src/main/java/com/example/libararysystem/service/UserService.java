@@ -39,6 +39,7 @@ private final UserMapper userMapper;
     return userMapper.toDTO(user);
     }
 
+
 //get user by email
     public UserDTO getUserByEmail(String email) {
     Optional<User> user = userRepo.findByEmail(email);

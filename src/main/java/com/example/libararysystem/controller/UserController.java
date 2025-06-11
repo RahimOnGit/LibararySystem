@@ -27,9 +27,38 @@ public class UserController {
         this.userService = userService;
         this.loanService = loanService;
     }
+
+
+
+    //create user
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO user) {
+        UserDTO dto = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    }
+
+    //get by email
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        UserDTO userDTO =  userService.getUserByEmail(email);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/allInfo")
+    public ResponseEntity<List<User>> getAllInfo() {
+
+        List<User> users = userRepo.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+
+
+
+
+
     //post
     @PostMapping("/loans")
-    public ResponseEntity<?> createLoan(@RequestParam("bookId") int bookId , @RequestParam("userId") int userId) {
+    public ResponseEntity<?> createLoan(@RequestParam("bookId") long bookId , @RequestParam("userId") long userId) {
 
         LoanDTO loanDTO = loanService.borrowBook(bookId,userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(loanDTO);
@@ -62,26 +91,5 @@ public class UserController {
 
 
 
-
-//create user
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO user) {
-        UserDTO dto = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-    }
-
-    //get by email
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
-       UserDTO userDTO =  userService.getUserByEmail(email);
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @GetMapping("/allInfo")
-    public ResponseEntity<List<User>> getAllInfo() {
-
-        List<User> users = userRepo.findAll();
-        return ResponseEntity.ok(users);
-    }
 
 }

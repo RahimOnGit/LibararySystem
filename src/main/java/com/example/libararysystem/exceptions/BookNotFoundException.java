@@ -6,6 +6,12 @@ public class BookNotFoundException extends RuntimeException{
         super("Book not found with title: " + title);
 
     }
+    public BookNotFoundException(int id) {
+        super("Book not found with id: " + id);
+    }
+    public BookNotFoundException(Long id) {
+        super("Book not found with id: " + id);
+    }
 }
 
 
