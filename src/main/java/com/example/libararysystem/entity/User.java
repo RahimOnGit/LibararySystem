@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -29,13 +27,26 @@ public class User {
     @Column(name = "registration_date")
     private String Registration;
 
+    @Column()
+    private String username;
+
+    @Column
+    private boolean enabled = true;
+
+    @Column(name = "role" , nullable = false)
+    private String role;
+
+
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Loan> loans = new ArrayList<>();
 
 public User() {}
 
-
-
-
+    public User(String username, String password, boolean enabled) {
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+    }
 }
+

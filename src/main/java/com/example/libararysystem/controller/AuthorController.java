@@ -47,6 +47,6 @@ public class AuthorController {
         List<authors> authors =  authorService.allInfo();
         return ResponseEntity.ok(authors);
     }
-
+ 
 
 }

@@ -44,12 +44,6 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/allInfo")
-    public ResponseEntity<List<User>> getAllInfo() {
-
-        List<User> users = userRepo.findAll();
-        return ResponseEntity.ok(users);
-    }
 
 
 

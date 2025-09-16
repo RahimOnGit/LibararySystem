@@ -7,20 +7,24 @@ import com.example.libararysystem.exceptions.UserValidationException;
 import com.example.libararysystem.mapper.UserMapper;
 import com.example.libararysystem.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.PasswordAuthentication;
 import java.util.Optional;
 
 @Service
 public class UserService {
+
 private final UserRepo userRepo;
 private final UserMapper userMapper;
+private final PasswordEncoder passwordEncoder;
+
 
 @Autowired
-    public UserService(UserRepo userRepo, UserMapper userMapper) {
+    public UserService(UserRepo userRepo, UserMapper userMapper, PasswordEncoder passwordEncoder) {
     this.userRepo = userRepo;
     this.userMapper = userMapper;
+    this.passwordEncoder = passwordEncoder;
 }
 //new user
     public UserDTO createUser(UserCreateDTO dto) {
@@ -35,15 +39,71 @@ private final UserMapper userMapper;
 
     User user = userMapper.toEntity(dto);
     user.setPassword( dto.getPassword());
+
     userRepo.save(user);
     return userMapper.toDTO(user);
     }
 
+    public void register(UserCreateDTO dto) {
+
+    if(userRepo.findByEmail(dto.getEmail()).isPresent()) {
+        throw new UserValidationException("Email already registered");
+    }
+    if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
+        throw new UserValidationException("Username already taken");
+    }
+
+        User user = new User();
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword())); // IMPORTANT
+        user.setEnabled(true);
+        String role = dto.getRole();
+        if(role== null || role.trim().isEmpty())
+        {
+            role = "ROLE_USER";
+        }
+        user.setRole(role.toUpperCase());
+     userRepo.save(user);
+        }
+
+    public void registerAdmin(UserCreateDTO dto) {
+
+    dto.setRole("ROLE_ADMIN");
+    register(dto);
+
+        }
 
 //get user by email
     public UserDTO getUserByEmail(String email) {
     Optional<User> user = userRepo.findByEmail(email);
         return user.map(value -> userMapper.toDTO(value)).orElse(null);
     }
+
+
+    //delete user
+    public Optional<User> deleteUserById(Long id) {
+    Optional<User> user = userRepo.findById(id);
+    if(user.isPresent()) {
+        userRepo.delete(user.get());
+    }
+    return user;
+    }
+
+    //deactivate user
+    public User changeStatusUserById(Long id, boolean status) {
+    Optional<User> user = userRepo.findById(id);
+    if(user.isPresent()) {
+        user.get().setEnabled(status);
+        userRepo.save(user.get());
+    }
+    else
+        throw new UserValidationException("User not found with id :" + id);
+
+    return user.get();
+    }
+
 
 }
