@@ -6,11 +6,15 @@ import com.example.libararysystem.entity.User;
 import com.example.libararysystem.exceptions.UserValidationException;
 import com.example.libararysystem.mapper.UserMapper;
 import com.example.libararysystem.repository.UserRepo;
+import com.example.libararysystem.utilities.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+
+import java.util.*;
+
 
 @Service
 public class UserService {
@@ -18,16 +22,19 @@ public class UserService {
 private final UserRepo userRepo;
 private final UserMapper userMapper;
 private final PasswordEncoder passwordEncoder;
+private final Validator validator;
 
 
 @Autowired
-    public UserService(UserRepo userRepo, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepo, UserMapper userMapper, PasswordEncoder passwordEncoder, Validator validator) {
     this.userRepo = userRepo;
     this.userMapper = userMapper;
     this.passwordEncoder = passwordEncoder;
+    this.validator = validator;
+
 }
 //new user
-    public UserDTO createUser(UserCreateDTO dto) {
+public UserDTO createUser(UserCreateDTO dto) {
 
         if(dto.getFirstName() == null || dto.getFirstName().isEmpty()) throw new UserValidationException("First name cannot be empty");
         if(dto.getLastName() == null || dto.getLastName().isEmpty()) throw new UserValidationException("Last name cannot be empty");
@@ -37,12 +44,16 @@ private final PasswordEncoder passwordEncoder;
     if(dto.getPassword().length() < 8) throw new UserValidationException("Password must be at least 8 characters");
 
 
+
+
+
     User user = userMapper.toEntity(dto);
     user.setPassword( dto.getPassword());
 
     userRepo.save(user);
     return userMapper.toDTO(user);
     }
+
 
     public void register(UserCreateDTO dto) {
 
@@ -52,6 +63,11 @@ private final PasswordEncoder passwordEncoder;
     if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
         throw new UserValidationException("Username already taken");
     }
+
+        List<String> errors  = validator.validatePassword(dto.getPassword());
+        if(!errors.isEmpty())
+            throw new UserValidationException("validation failed: "+errors);
+
 
         User user = new User();
         user.setFirstName(dto.getFirstName());
@@ -69,21 +85,25 @@ private final PasswordEncoder passwordEncoder;
      userRepo.save(user);
         }
 
-    public void registerAdmin(UserCreateDTO dto) {
+
+        public void registerAdmin(UserCreateDTO dto) {
 
     dto.setRole("ROLE_ADMIN");
     register(dto);
 
         }
 
+        @PreAuthorize("hasRole('ADMIN')")
 //get user by email
-    public UserDTO getUserByEmail(String email) {
+public UserDTO getUserByEmail(String email) {
     Optional<User> user = userRepo.findByEmail(email);
         return user.map(value -> userMapper.toDTO(value)).orElse(null);
     }
 
 
     //delete user
+    @PreAuthorize("hasRole('ADMIN')")
+
     public Optional<User> deleteUserById(Long id) {
     Optional<User> user = userRepo.findById(id);
     if(user.isPresent()) {
@@ -93,8 +113,10 @@ private final PasswordEncoder passwordEncoder;
     }
 
     //deactivate user
+@PreAuthorize("hasRole('ADMIN')")
     public User changeStatusUserById(Long id, boolean status) {
     Optional<User> user = userRepo.findById(id);
+
     if(user.isPresent()) {
         user.get().setEnabled(status);
         userRepo.save(user.get());
@@ -104,6 +126,18 @@ private final PasswordEncoder passwordEncoder;
 
     return user.get();
     }
+
+
+
+    public Optional<User> getUserByUsername(String username) {
+
+        Optional<User> user =  userRepo.findByUsername(username);
+        if(user.isPresent()) {
+            return user;
+        }
+        else
+            throw new UserValidationException("User not found with name :" + username);
+}
 
 
 }

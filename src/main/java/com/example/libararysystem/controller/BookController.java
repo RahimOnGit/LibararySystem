@@ -76,30 +76,6 @@ public ResponseEntity<Page<BookDetailsDTO>> findAll
     }
 
 
-
-//    @PostMapping
-//    public ResponseEntity<Book> createRawBook(@RequestBody Book book) {
-//
-//        if (book.getAuthors() != null && book.getAuthors().getId() != null) {
-//            authors author = authorService.getAuthorById(book.getAuthors().getId());
-//            book.setAuthors(author);
-//        }
-//
-//        Book savedBook = bookRepo.save(book);
-//        return ResponseEntity.ok(savedBook);
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
     @GetMapping("/test")
     public ResponseEntity<List<Book>> test() {
 List<Book> books = bookRepo.findAll();

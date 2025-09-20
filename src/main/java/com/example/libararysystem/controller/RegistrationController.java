@@ -2,6 +2,7 @@ package com.example.libararysystem.controller;
 
 import com.example.libararysystem.dto.user.UserCreateDTO;
 import com.example.libararysystem.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,13 +22,10 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserCreateDTO dto) {
-        try {
-            if(dto.getPassword()==null || dto.getPassword().length()<3)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 3 characters long");
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserCreateDTO dto) {
 
-
-
+try
+{
             userService.register(dto);
             return ResponseEntity.ok("User registered successfully!");
         } catch (RuntimeException e) {
@@ -36,7 +34,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register/admin")
-    public ResponseEntity<?> registerAdmin(@RequestBody UserCreateDTO dto) {
+    public ResponseEntity<?> registerAdmin(@Valid @RequestBody UserCreateDTO dto) {
         try {
             userService.registerAdmin(dto);
             return ResponseEntity.ok("Admin registered successfully!");

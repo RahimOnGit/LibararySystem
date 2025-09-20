@@ -33,7 +33,7 @@ public class Book {
     private authors authors;
 
     //Loan rel
-    @OneToMany(mappedBy = "book" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book" , cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Loan> loans = new ArrayList<>();
 

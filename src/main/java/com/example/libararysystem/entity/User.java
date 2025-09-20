@@ -2,8 +2,11 @@ package com.example.libararysystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
@@ -22,12 +25,14 @@ public class User {
     private String lastName;
     @Column(name="email")
     private String email;
+
     @Column(name = "password")
     private String password;
     @Column(name = "registration_date")
     private String Registration;
 
-    @Column()
+    @Column(name = "username")
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "username must be alphanumeric")
     private String username;
 
     @Column
@@ -35,6 +40,12 @@ public class User {
 
     @Column(name = "role" , nullable = false)
     private String role;
+
+    @Column(name="failed_attempts")
+    private int failedAttempts = 0;
+
+    @Column(name = "locked_until")
+    private LocalDateTime lockedUntil;
 
 
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)

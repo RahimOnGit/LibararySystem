@@ -11,6 +11,8 @@ public class TestController {
     @GetMapping("/api/test")
     public String test(Principal principal) {
         if (principal == null) return "Not authenticated";
-        return "Authenticated as: " + principal.getName();
+        return "User Authenticated as: " + principal.getName();
     }
+
+
 }

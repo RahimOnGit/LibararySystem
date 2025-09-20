@@ -1,11 +1,17 @@
 package com.example.libararysystem.controller;
 
+import com.example.libararysystem.dto.loan.LoanDTO;
+import com.example.libararysystem.entity.Loan;
 import com.example.libararysystem.entity.User;
+import com.example.libararysystem.repository.LoanRepo;
 import com.example.libararysystem.repository.UserRepo;
+import com.example.libararysystem.service.LoanService;
 import com.example.libararysystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +22,12 @@ import java.util.Optional;
 public class AdminController {
     private final UserService userService;
     private final UserRepo userRepo;
+    private final LoanService loanService;
     @Autowired
-    public AdminController(UserService userService , UserRepo userRepo) {
+    public AdminController(UserService userService , UserRepo userRepo, LoanService loanService) {
         this.userService = userService;
         this.userRepo = userRepo;
+        this.loanService = loanService;
     }
 
     @GetMapping("/users/allInfo")
@@ -43,6 +51,13 @@ public class AdminController {
         User user = userService.changeStatusUserById(id,status);
         return ResponseEntity.ok().body(user);
 
+    }
+
+
+    @GetMapping("/loans")
+    public ResponseEntity<List<LoanDTO>> getAllLoans() {
+
+        return ResponseEntity.ok(loanService.getAllLoans());
     }
 
 

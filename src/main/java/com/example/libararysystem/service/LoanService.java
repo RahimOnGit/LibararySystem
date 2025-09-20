@@ -4,7 +4,6 @@ import com.example.libararysystem.dto.loan.LoanCreateDTO;
 import com.example.libararysystem.dto.loan.LoanDTO;
 import com.example.libararysystem.entity.Book;
 import com.example.libararysystem.entity.Loan;
-import com.example.libararysystem.entity.User;
 import com.example.libararysystem.exceptions.BookNotFoundException;
 import com.example.libararysystem.exceptions.LoanNotFoundException;
 import com.example.libararysystem.mapper.LoanMapper;
@@ -13,7 +12,9 @@ import com.example.libararysystem.repository.LoanRepo;
 import com.example.libararysystem.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,7 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +51,7 @@ public class LoanService {
 
 //GET /users/{userId}/loans - Hämta användarens lån
     //find the user by id
-    public List<LoanDTO> getLoanByUserId(int userId) {
+    public List<LoanDTO> getLoan(long userId) {
 
         return loanRepo.findByUserId(userId)
                 .stream()
@@ -63,6 +63,7 @@ public class LoanService {
     //POST
     //borrow a book
     //create loan
+    @PreAuthorize("hasRole('USER')")
   @Transactional(isolation = Isolation.SERIALIZABLE , propagation = Propagation.REQUIRED)
 public LoanDTO borrowBook(Long bookId, Long userId) {
 
@@ -81,7 +82,7 @@ public LoanDTO borrowBook(Long bookId, Long userId) {
            return loanMapper.toDTO(loan);
 
     }
-
+    @PreAuthorize("hasRole('USER')")
     public LoanDTO returnBook(Long loanId) {
         //loan
         Loan loan = loanRepo.findById(loanId).orElseThrow(()-> new LoanNotFoundException(loanId));
@@ -91,10 +92,7 @@ public LoanDTO borrowBook(Long bookId, Long userId) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "book already returned on  " + loan.getReturnedDate());
         }
 
-
     //remove book from  loan  , book avalabilty
-
-
         //2 update book available
         Book book = loan.getBook();
         book.setAvailableCopies(book.getAvailableCopies() + 1);
@@ -109,7 +107,7 @@ public LoanDTO borrowBook(Long bookId, Long userId) {
 
     }
 
-
+    @PreAuthorize("hasRole('USER')")
     public LoanDTO extendDate(Long loanId)
     {
       Loan loan= loanRepo.findById(loanId).orElseThrow(()-> new LoanNotFoundException(loanId));
@@ -122,8 +120,11 @@ public LoanDTO borrowBook(Long bookId, Long userId) {
       return loanMapper.toDTO(loan);
     }
 
+@PreAuthorize("hasRole('ADMIN')")
+public List<LoanDTO> getAllLoans() {
+        return loanRepo.findAll().stream().map(loanMapper::toDTO).collect(Collectors.toList());
 
-
+}
 
 
 }

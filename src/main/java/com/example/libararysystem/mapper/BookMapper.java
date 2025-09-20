@@ -19,12 +19,14 @@ public class BookMapper {
     private  final AuthorRepo authorRepo;
     private final BookRepo bookRepo;
     private final AuthorService authorService;
+    private final AuthorMapper authorMapper;
 
     @Autowired
-    public BookMapper(AuthorRepo authorRepo, BookRepo bookRepo, AuthorService authorService) {
+    public BookMapper(AuthorRepo authorRepo, BookRepo bookRepo, AuthorService authorService, AuthorMapper authorMapper) {
         this.authorRepo = authorRepo;
         this.bookRepo = bookRepo;
         this.authorService = authorService;
+        this.authorMapper = authorMapper;
     }
 
     public  BookDTO toDto(Book book) {
@@ -34,7 +36,7 @@ public class BookMapper {
                 book.getId(),
                 book.getTitle(),
                 book.getPublicationYear(),
-                book.getAvailableCopies(),  // Added missing field
+                book.getAvailableCopies(),
                 book.getTotalCopies());
 //                book.getAuthors());
 //        != null ? book.getAuthors().getId() : null  // Include author ID
@@ -47,7 +49,7 @@ public class BookMapper {
         Book book = new Book();
         book.setTitle(dto.getTitle());
         book.setPublicationYear(dto.getPublicationYear());
-        book.setAvailableCopies(dto.getAvailableCopies());  // Added missing field
+        book.setAvailableCopies(dto.getAvailableCopies());
         book.setTotalCopies(dto.getTotalCopies());
         book.setAuthors(authorService.getAuthorById(dto.getAuthorId()));
 
@@ -62,9 +64,9 @@ public class BookMapper {
                 book.getId(),
                 book.getTitle(),
                 book.getPublicationYear(),
-                book.getAvailableCopies(),  // Added missing field
+                book.getAvailableCopies(),
                 book.getTotalCopies(),
-                book.getAuthors());
+                authorMapper.toDTO(book.getAuthors()));
 //                book.getAuthors());
 //        != null ? book.getAuthors().getId() : null  // Include author ID
 

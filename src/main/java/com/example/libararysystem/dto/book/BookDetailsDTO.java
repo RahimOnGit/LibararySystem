@@ -1,5 +1,6 @@
 package com.example.libararysystem.dto.book;
 
+import com.example.libararysystem.dto.AuthorDTO.AuthorDTO;
 import com.example.libararysystem.entity.authors;
 import lombok.Data;
 
@@ -10,8 +11,8 @@ public class BookDetailsDTO {
     private int publicationYear;
     private int totalCopies;
     private int availableCopies;
-    private authors author;
-    public BookDetailsDTO(Long id, String title, int publicationYear, int totalCopies, int availableCopies , authors author) {
+    private AuthorDTO author;
+    public BookDetailsDTO(Long id, String title, int publicationYear, int totalCopies, int availableCopies , AuthorDTO author) {
         this.id = id;
         this.title = title;
         this.publicationYear = publicationYear;
