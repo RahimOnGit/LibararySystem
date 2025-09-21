@@ -30,7 +30,7 @@ public class AdminController {
         this.loanService = loanService;
     }
 
-    @GetMapping("/users/allInfo")
+    @GetMapping("/users/info")
     public ResponseEntity<List<User>> getAllInfo() {
 
         List<User> users = userRepo.findAll();
@@ -41,7 +41,7 @@ public class AdminController {
     {
        Optional<User> user =  userService.deleteUserById(id);
         return user.map(value ->
-                ResponseEntity.ok().body("successfully deleted\nuser id :" + value.getId()))
+                ResponseEntity.ok().body("successfully deleted\nuser id :" + value.getId()+"\nusername: "+value.getUsername()) )
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with id :" + id));
        }
 

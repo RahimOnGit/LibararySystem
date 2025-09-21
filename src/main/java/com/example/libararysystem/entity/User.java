@@ -42,7 +42,7 @@ public class User {
     private String role;
 
     @Column(name="failed_attempts")
-    private int failedAttempts = 0;
+    private Integer failedAttempts = 0;
 
     @Column(name = "locked_until")
     private LocalDateTime lockedUntil;

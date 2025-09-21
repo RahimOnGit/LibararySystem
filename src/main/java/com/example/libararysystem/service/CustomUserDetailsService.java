@@ -24,8 +24,15 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + usernameOrEmail)));
 
         String role = u.getRole(); // could already be "ROLE_ADMIN" or "ADMIN"
-        String authority = (role != null && role.startsWith("ROLE_")) ? role : "ROLE_" + role;
-
+        // Ensure role has ROLE_ prefix for Spring Security
+        String authority;
+        if (role != null && role.startsWith("ROLE_")) {
+            authority = role;
+        } else if (role != null) {
+            authority = "ROLE_" + role;
+        } else {
+            authority = "ROLE_USER"; // default role
+        }
         return org.springframework.security.core.userdetails.User.builder()
                 .username(u.getUsername() != null ? u.getUsername() : u.getEmail())
                 .password(u.getPassword()) // must be encoded already (bcrypt)
