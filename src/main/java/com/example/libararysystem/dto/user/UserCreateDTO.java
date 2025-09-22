@@ -1,11 +1,13 @@
 package com.example.libararysystem.dto.user;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,13 +22,16 @@ public class UserCreateDTO {
     @NotBlank(message = "username name is required")
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "username must be alphanumeric")
     private String username;
+
     @NotBlank(message = "email is required")
+    @Email(message = "invalid email format")
     private String email;
+
     @NotBlank(message = "password is required")
     @Size(min = 4 , message = "password must be at least 4 characters")
-     private String password;
-    private String Registration = LocalDate.now().toString();
-
+    private String password;
+    private String Registration = LocalDateTime.now().withSecond(0).withNano(0).toString();
+    private boolean enabled = true;
     private String role = "USER";
 
 

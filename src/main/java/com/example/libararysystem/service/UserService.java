@@ -74,8 +74,10 @@ public UserDTO createUser(UserCreateDTO dto) {
         user.setLastName(dto.getLastName());
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword())); // IMPORTANT
-        user.setEnabled(true);
+        user.setRegistration(dto.getRegistration());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setEnabled(dto.isEnabled());
+
         String role = dto.getRole();
         if(role== null || role.trim().isEmpty())
         {

@@ -31,8 +31,7 @@ public class BookService {
         this.bookMapper = bookMapper;
 
     }
-    // - Lista alla böcker
-
+//reachable by all
     public List<BookDetailsDTO> findAll() {
         return bookRepo.findAll()
                 .stream().map(bookMapper::toDtoDetails).toList();
@@ -50,8 +49,8 @@ public class BookService {
 
 
 
-//GET /books/search - Sök böcker på title(query parameters)
-public List<BookDTO> findByTitle(String title)  {
+//anyone can search for a book
+    public List<BookDTO> findByTitle(String title)  {
 
        List<Book> books = bookRepo.findByTitle(title);
                if(books.isEmpty()) {
@@ -64,8 +63,7 @@ public List<BookDTO> findByTitle(String title)  {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    //POST /books - Skapa ny bok
+    @PreAuthorize("hasRole('ADMIN')") //just the admin can create new book
     public BookDTO create(BookCreateDTO dto) {
 
         if(dto!=null)
@@ -76,10 +74,5 @@ public List<BookDTO> findByTitle(String title)  {
         }
        throw new IllegalArgumentException("book cannot be null");
          }
-//@Transactional
-//    public Book save(Book book)
-//    {
-//        return bookRepo.save(book);
-//    }
 
 }

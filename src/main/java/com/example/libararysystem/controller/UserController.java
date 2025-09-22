@@ -7,6 +7,7 @@ import com.example.libararysystem.entity.User;
 import com.example.libararysystem.repository.UserRepo;
 import com.example.libararysystem.service.LoanService;
 import com.example.libararysystem.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,19 +50,6 @@ public class UserController {
     }
 
 
-
-
-
-
-
-    //post
-//    @PostMapping("/loans")
-//    public ResponseEntity<?> createLoan(@RequestParam("bookId") long bookId , @RequestParam("userId") long userId) {
-//
-//        LoanDTO loanDTO = loanService.borrowBook(bookId,userId);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(loanDTO);
-//
-//    }
 
     @PutMapping("/loans/{id}/extend")
     public ResponseEntity<?> extendLoan(@PathVariable("id") long loanId)

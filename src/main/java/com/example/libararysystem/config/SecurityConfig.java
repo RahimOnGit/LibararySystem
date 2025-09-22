@@ -68,7 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                        .requestMatchers("/api/register", "/api/register/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/book/paged").permitAll()
+                        .requestMatchers("/book/**").permitAll()
                         .requestMatchers("api/test").hasRole("USER")
                         .requestMatchers("/api/admin").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")

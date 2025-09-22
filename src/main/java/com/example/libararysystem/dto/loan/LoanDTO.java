@@ -10,17 +10,17 @@ import lombok.Data;
 @Data
 public class LoanDTO {
 
-    private Book book;
-    private User user;
+    private String book_title;
+    private String username;
 private String borrowDate;
 private String dueDate;
 private String returnedDate;
 
 
 
-    public LoanDTO(String borrowDate, String dueDate, String returnedDate, Book book, User user) {
-        this.book = book;
-        this.user = user;
+    public LoanDTO(String borrowDate, String dueDate, String returnedDate, String book_title, String username) {
+        this.book_title = book_title;
+        this.username = username;
         this.borrowDate = borrowDate;
         this.dueDate = dueDate;
         this.returnedDate = returnedDate;
@@ -28,8 +28,5 @@ private String returnedDate;
     }
     public LoanDTO() {}
 
-    public LoanDTO(Book book, User user) {
-        this.book = book;
-        this.user = user;
-    }
+
 }

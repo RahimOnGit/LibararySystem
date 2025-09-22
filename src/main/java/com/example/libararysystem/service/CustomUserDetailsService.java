@@ -23,8 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseGet(() -> userRepo.findByEmail(usernameOrEmail)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + usernameOrEmail)));
 
-        String role = u.getRole(); // could already be "ROLE_ADMIN" or "ADMIN"
-        // Ensure role has ROLE_ prefix for Spring Security
+        String role = u.getRole();
+
         String authority;
         if (role != null && role.startsWith("ROLE_")) {
             authority = role;
@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return org.springframework.security.core.userdetails.User.builder()
                 .username(u.getUsername() != null ? u.getUsername() : u.getEmail())
-                .password(u.getPassword()) // must be encoded already (bcrypt)
+                .password(u.getPassword())
                 .authorities(authority)
                 .disabled(!u.isEnabled())
                 .build();

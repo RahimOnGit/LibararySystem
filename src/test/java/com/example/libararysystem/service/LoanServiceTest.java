@@ -62,8 +62,8 @@ public class LoanServiceTest {
         loan.setBook(book);
 
         LoanDTO mockDto = new LoanDTO();
-        mockDto.setBook(book);
-        mockDto.setUser(user);
+        mockDto.setBook_title(book.getTitle());
+        mockDto.setUsername(user.getUsername());
 
         when(loanRepo.save(loan)).thenReturn(loan);
         when(loanMapper.toEntity(new LoanCreateDTO(loan.getBook().getId(),loan.getUser().getId()))).thenReturn(loan);
@@ -74,7 +74,7 @@ public class LoanServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals("Clean Code", result.getBook().getTitle());
+        assertEquals("Clean Code", result.getBook_title());
 
 
         verify(loanRepo).save(loan);

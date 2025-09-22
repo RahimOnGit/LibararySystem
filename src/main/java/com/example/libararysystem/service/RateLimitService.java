@@ -8,7 +8,7 @@ import java.util.*;
 public class RateLimitService {
     private final Map<String, List<Long>> requestTimes = new HashMap<>();
 
-    private final int MAX_REQUESTS = 5;
+    private final int MAX_REQUESTS = 5; //5 req
     private final long TIME_WINDOW = 60000;
 
     public boolean isAllowed(String clientIP) {

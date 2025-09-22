@@ -35,8 +35,8 @@ public class User {
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "username must be alphanumeric")
     private String username;
 
-    @Column
-    private boolean enabled = true;
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
 
     @Column(name = "role" , nullable = false)
     private String role;
@@ -48,7 +48,7 @@ public class User {
     private LocalDateTime lockedUntil;
 
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Loan> loans = new ArrayList<>();
 
@@ -59,5 +59,7 @@ public User() {}
         this.password = password;
         this.enabled = enabled;
     }
+
+
 }
 
