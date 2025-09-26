@@ -54,8 +54,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .exceptionHandling(exception -> {
+                    exception.authenticationEntryPoint((request, response, authException) ->
+                            {
+                                response.setStatus(401);
+                            response.getWriter().write("Unauthorized: " + authException.getMessage());
+                            }
+                            ).accessDeniedHandler((request, response, authException) ->
+                            {
+                                response.setStatus(403);
+                                response.getWriter().write("forbidden: " + authException.getMessage());
+                            }
+                    );
+
+
+                })
                 .headers(headers -> headers
-                        //includeSubDomains: This is an optional but highly recommended directive. It ensures that the policy applies to all subdomains (e.g., mail.google.com, drive.google.com) and not just the main domain.
                         .httpStrictTransportSecurity(hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(31536000)) // tells the browser to enforce this HTTPS-only rule for 31,536,000 seconds, which is one year.
                         .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())

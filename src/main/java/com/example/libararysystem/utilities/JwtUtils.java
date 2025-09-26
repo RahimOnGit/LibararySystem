@@ -16,7 +16,7 @@ import java.util.Date;
 public class JwtUtils {
 
 private final SecretKey jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    @Value("${app.jwtExpirationMs:900000}") // 15 minutes - default
+    @Value("${app.jwtExpirationMs:900000}") // 15 minutes default
     private Long jwtExpiresIn;
 
     @Value("${app.jwtRefreshExpirationMs:604800000}") // 7 days default
